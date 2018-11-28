@@ -6,8 +6,8 @@ This work has done as a testing task
 
 After finish download all files you need to:
 
-- Get this project into your server domains directory.
-- Open file db_config.php that stays in datagrid\includes.
+- Get this project into your servers domains directory.
+- Open file db_config.php that stands in datagrid\includes\db_config.php.
 - Enter your database system and create empty database, you'll need it later.
 
 ## Than you need to change defined variables:
@@ -24,5 +24,5 @@ After finish download all files you need to:
 - Create button allows you to create a record.
 - Edit button lets you to edit a record (only one record at time).
 - Delete is for deleting records. You can delete as more as you want.
-- Export button exporting records, that you choose to result.txt file(Location: datagrid/result/result.txt).
+- Export button exporting records, that you choose to result.txt file(Location: datagrid\result\result.txt).
 - Info button redirects you here.
