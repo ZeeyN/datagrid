@@ -39,16 +39,41 @@ class Content{
         $this->get_db_array();
     }
 
+    public function get_db_array(){
+    $this->work_on_array = $this->db->query('select * from `users`')->fetch_all(MYSQLI_ASSOC);
+}
+
+    public function only_one_check($check_arr)
+    {
+        if (count($check_arr) == 1) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function take_one($arr){
+    return $arr[0];
+}
+
+    public function check_on_equals($checking){
+        $query = sprintf('select `login` from `users` where `login` = "%s"', $checking);
+        $data = $this->db->query($query);
+        if(empty($data->num_rows)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
+//====Table_building====================================================================================================
     public function show_table_head(){
         echo $this->table_head;
     }
 
     public function show_table_bottom(){
         echo $this->table_bottom;
-    }
-
-    public function get_db_array(){
-        $this->work_on_array = $this->db->query('select * from `users`')->fetch_all(MYSQLI_ASSOC);
     }
 
     public function build_table(){
@@ -70,62 +95,26 @@ class Content{
     }
 
     public function show_table(){
-            $this->show_table_head();
-            foreach ($this->build_table() as $value) {
-                echo $value;
-            }
-            $this->show_table_bottom();
+        $this->show_table_head();
+        foreach ($this->build_table() as $value) {
+            echo $value;
+        }
+        $this->show_table_bottom();
     }
 
+//======================================================================================================================
+//====Deleting==========================================================================================================
     public function delete(){
         foreach($_POST['choice'] as $value){
             $this->db->query('delete from `users` where id = "'.$value.'"');
         }
         header('Location: http://localhost/datagrid/index.php ');
     }
-
-    public function only_one_check($check_arr)
-    {
-        if (count($check_arr) == 1) {
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-    public function take_one($arr){
-        return $arr[0];
-    }
-
-    public function show_edit($id,$login, $password, $email, $f_name, $l_name){
-        echo'
-             <div class="cont-frm">  
-                <input type="hidden" name="id" value="'.$id.'">
-                 <input type="text" name="new_login" value="'.$login.'">
-                 <input type="text" name="new_pass" value="'.$password.'">
-                 <input type="email" name="new_email" value="'.$email.'">
-                 <input type="text" name="new_fname" value="'.$f_name.'">
-                 <input type="text" name="new_lname" value="'.$l_name.'">
-             </div>
-             <div class="cont-btn">                            
-                <input type="submit" name="update" value="Submit">                         
-                <input type="submit" name="back" value="Back">                             
-             </div>        
-        ';
-    }
+//======================================================================================================================
+//====Creating==========================================================================================================
 
     public function show_create_form(){
         echo $this->create_form;
-    }
-
-    public function check_on_equals($checking){
-        $query = sprintf('select `login` from `users` where `login` = "%s"', $checking);
-        $data = $this->db->query($query);
-        if(empty($data->num_rows)){
-            return true;
-        }else{
-            return false;
-        }
     }
 
     public function create(){
@@ -157,6 +146,26 @@ class Content{
                 echo'Enter information!';
             }
         }
+    }
+
+//======================================================================================================================
+//====Editing===========================================================================================================
+
+    public function show_edit($id,$login, $password, $email, $f_name, $l_name){
+        echo'
+             <div class="cont-frm">  
+                <input type="hidden" name="id" value="'.$id.'">
+                 <input type="text" name="new_login" value="'.$login.'">
+                 <input type="text" name="new_pass" value="'.$password.'">
+                 <input type="email" name="new_email" value="'.$email.'">
+                 <input type="text" name="new_fname" value="'.$f_name.'">
+                 <input type="text" name="new_lname" value="'.$l_name.'">
+             </div>
+             <div class="cont-btn">                            
+                <input type="submit" name="update" value="Submit">                         
+                <input type="submit" name="back" value="Back">                             
+             </div>        
+        ';
     }
 
     public function build_edit(){
@@ -198,23 +207,62 @@ class Content{
             header('Location: http://localhost/datagrid/index.php ');
         }
 
-            if(empty($_SESSION['choise']) or $this->only_one_check($_SESSION['choice'])==false){
-                session_unset();
-                unset($_POST);
-                header('Location: http://localhost/datagrid/index.php ');
-            }
+        if(empty($_SESSION['choice']) or $this->only_one_check($_SESSION['choice'])==false){
+            session_unset();
+            unset($_POST);
+            header('Location: http://localhost/datagrid/index.php ');
+        }
 
     }
 
+//======================================================================================================================
+//====Exporting=========================================================================================================
+
+    public function export(){
+        if(!empty($_POST['choice'])){
+            $fp = fopen('result/result.txt', 'w');
+            foreach($_POST['choice'] as $key){
+                $data[] = $this->db->query('select * from `users` where id = "'.$key.'"')->fetch_all(MYSQLI_ASSOC);//
+                foreach($data as $value){
+                    foreach($value as $info){
+                        $str = $info['login'].': '."\r".' Password: '.$info['password']."\n ".'Email: '.$info['email']."\n ".'First name: '.$info['f_name']."\n ".'Last name: '.$info['l_name']."\n ";
+
+                    }
+                }
+
+                fwrite($fp, $str."\r\n");
+            }
+            fclose($fp);
+            unset($_POST);
+            header('Location: http://localhost/datagrid/index.php ');
+
+
+
+        }
 
 
 
 
 
 
+        if(empty($_POST['choice']) and !empty($_POST['export'])){
+
+            unset($_POST);
+            header('Location: http://localhost/datagrid/index.php ');
+        }
+    }
+
+
+//======================================================================================================================
+//==Main method=========================================================================================================
 
     public function show_cont()
     {
+
+//        print_r($_POST);
+
+
+//        print_r($_SESSION);
 
         if(!$_POST){
             $this->show_table();
@@ -234,28 +282,18 @@ class Content{
             $this->edit();
         }
 
+        if(!empty($_POST['export'])){
 
-
-
+            $this->export();
+        }
 
         if (!empty($_POST['info'])) {
 
-            header('Location: https://github.com/ZeeyN/testwork/blob/master/testwork.nr/README.md ');
+            header('Location: https://github.com/ZeeyN/datagrid ');
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
+//======================================================================================================================
 
 }
 
