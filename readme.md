@@ -18,3 +18,11 @@ After finish download all files you need to:
 - DB_NAME is a name of database that you created before
 - DB_TABLE_VERSIONS using in scripts. Do not change it, or you will brake migration system.
 - DB_MYSQL_DIR this project working with MySQL for now, and for good link with database you need to change this variable on the directory, where stands your mysql executional file, ecraning <\\> symbols with another <\\> (Example: <C:\\\Username\\\eth.>) .
+
+## Instruction
+
+- Create button allows you to create a record.
+- Edit button lets you to edit a record (only one choice).
+- Delete is for deleting records. You can delete as more as you want.
+- Export button exporting records, that you choose to result.txt file(Location: datagrid/result/result.txt).
+- Info button redirects you here.
