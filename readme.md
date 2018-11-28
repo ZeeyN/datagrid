@@ -7,7 +7,7 @@ This work has done as a testing task
 After finish download all files you need to:
 
 - Get this project into your servers domains directory.
-- Open file db_config.php that stands in datagrid\includes\db_config.php.
+- Open file db_config.php that stands in (datagrid\includes\db_config.php).
 - Enter your database system and create empty database, you'll need it later.
 
 ## Than you need to change defined variables:
