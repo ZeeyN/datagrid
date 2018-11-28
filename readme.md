@@ -7,10 +7,10 @@ This work has done as a testing task
 After finish download all files you need to:
 
 - Get this project into your servers domains directory.
-- Open file db_config.php that stands in (datagrid\includes\db_config.php).
 - Enter your database system and create empty database, you'll need it later.
+- Open file db_config.php (Location: datagrid\includes\db_config.php).
 
-## Than you need to change defined variables:
+## Now you need to change defined variables:
 
 - DB_HOST is your hostname.
 - DB_USER is a username for get access to your database system.
