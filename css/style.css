@@ -1,0 +1,142 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+    background-color: lightyellow;
+}
+
+table {
+    border:1px solid black;
+    border-collapse:collapse;
+    width:100%;
+}
+
+th {
+    border:1px solid black;
+    background-color: lightblue;
+}
+
+td{
+    text-align: center;
+    border:1px solid black;
+    background-color: aliceblue;
+}
+
+.cellbut{
+    width: 100%;
+    height: 100%;
+    background-color: lightblue;
+    border: none;
+
+}
+
+header{
+    border-bottom: 1px solid black;
+    position: fixed;
+    height: 65px;
+    width:100%;
+    background-color: lightblue;
+}
+.header-txt{
+    margin-top: 15px;
+    margin-left: 25%;
+    width: 50%;
+    font-size: 35px;
+    background-color: inherit;
+}
+
+.content{
+    padding-top: 80px;
+    width: 75%;
+    margin-left: 5%;
+}
+.right-panel{
+    position: fixed;
+    border-left: 1px solid black;
+    height: 100%;
+    width: 15%;
+    margin-left: 85%;
+    margin-top: 65px;
+    background-color: aliceblue;
+}
+
+.right-panel input{
+    width: 100%;
+    font-size: 25px;
+    border: 1px solid darkred;
+    color: darkslategrey;
+    background-color: lightgreen;
+}
+
+.main-btn{
+    height: 15%;
+    width: 100%;
+    align-items: center;
+    background-color: inherit;
+}
+
+.main-btn input{
+
+    height: 100%;
+
+
+}
+
+.other-btns{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10%;
+    width: 100%;
+    height: 50%;
+    background-color: inherit;
+
+}
+
+.other-btns input{
+    margin-top: 5%;
+    height: 20%;
+
+}
+
+.textarea{
+    margin: 2.5%;
+    border: 1.25px solid black;
+}
+
+.textarea textarea{
+    border: none;
+    background-color: lightyellow;
+    margin: 2.5%;
+    resize: none;
+    width: 90%;
+    height: 100%;
+}
+
+.cont-frm{
+    width: 30%;
+
+    display: flex;
+    flex-flow: column wrap;
+}
+.cont-frm input{
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.cont-btn input{
+    margin-right: 50px;
+    font-size: 15px;
+}
