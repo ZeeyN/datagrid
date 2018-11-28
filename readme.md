@@ -22,7 +22,7 @@ After finish download all files you need to:
 ## Instruction
 
 - Create button allows you to create a record.
-- Edit button lets you to edit a record (only one choice).
+- Edit button lets you to edit a record (only once at time).
 - Delete is for deleting records. You can delete as more as you want.
 - Export button exporting records, that you choose to result.txt file(Location: datagrid/result/result.txt).
 - Info button redirects you here.
