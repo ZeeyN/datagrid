@@ -3,7 +3,6 @@ class Migration
 {
 
     public $files;
-//    public $msg;
 
 
     public function __construct()
