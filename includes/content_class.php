@@ -30,17 +30,20 @@ class Content{
     ';
 
     public $work_on_array = array();
-    public $db;
 //======================================================================================================================
 //==Methods=============================================================================================================
     public function __construct()
     {
-        $this->db = new Database();
         $this->get_db_array();
     }
 
+    public function content_query($sql_query){
+        global $database;
+        return $database->query($sql_query);
+    }
+
     public function get_db_array(){
-    $this->work_on_array = $this->db->query('select * from `users`')->fetch_all(MYSQLI_ASSOC);
+        $this->work_on_array = $this->content_query("SELECT * FROM `users`")->fetch_all(MYSQLI_ASSOC);
 }
 
     public function only_one_check($check_arr)
@@ -53,17 +56,24 @@ class Content{
     }
 
     public function take_one($arr){
-    return $arr[0];
+        return $arr[0];
 }
 
     public function check_on_equals($checking){
-        $query = sprintf('select `login` from `users` where `login` = "%s"', $checking);
-        $data = $this->db->query($query);
+        $data = $this->content_query("SELECT `login` FROM `users` WHERE `login` ='$checking'");
         if(empty($data->num_rows)){
             return true;
         }else{
             return false;
         }
+    }
+
+    private function redirect_to_main(){
+
+        session_unset();
+        unset($_POST);
+        header('Location: http://localhost/datagrid/index.php ');
+
     }
 
 
@@ -106,9 +116,9 @@ class Content{
 //====Deleting==========================================================================================================
     public function delete(){
         foreach($_POST['choice'] as $value){
-            $this->db->query('delete from `users` where id = "'.$value.'"');
+            $this->content_query("DELETE FROM `users` WHERE id = $value");
         }
-        header('Location: http://localhost/datagrid/index.php ');
+        $this->redirect_to_main();
     }
 //======================================================================================================================
 //====Creating==========================================================================================================
@@ -122,9 +132,7 @@ class Content{
         $this->show_create_form();
 
         if(!empty($_POST['back'])){
-            session_unset();
-            unset($_POST['back']);
-            header('Location: http://localhost/datagrid/index.php ');
+            $this->redirect_to_main();
         }
 
         if(!empty($_POST['new_login']) and !empty($_POST['new_pass']) and !empty($_POST['new_email'])){
@@ -132,11 +140,13 @@ class Content{
             if($this->check_on_equals($_POST['new_login']) == true){
 
                 $query ='insert into `users`(login, password, email, f_name, l_name)
-                  values("'.$_POST['new_login'].'","'.$_POST['new_pass'].'","'.$_POST['new_email'].'","'.$_POST['new_fname'].'","'.$_POST['new_lname'].'")';
-                $this->db->query($query);
-                session_unset();
-                unset($_POST);
-                header('Location: http://localhost/datagrid/index.php ');
+                         values("'.$_POST['new_login'].'",
+                                "'.$_POST['new_pass'].'",
+                                "'.$_POST['new_email'].'",
+                                "'.$_POST['new_fname'].'",
+                                "'.$_POST['new_lname'].'")';
+                $this->content_query($query);
+                $this->redirect_to_main();
 
             }else{
                 echo 'This account already exists';
@@ -159,7 +169,7 @@ class Content{
                  <input type="text" name="new_pass" value="'.$password.'">
                  <input type="email" name="new_email" value="'.$email.'">
                  <input type="text" name="new_fname" value="'.$f_name.'">
-                 <input type="text" name="new_lname" value="'.$l_name.'">
+                 <input type="text"name="new_lname" value="'.$l_name.'">
              </div>
              <div class="cont-btn">                            
                 <input type="submit" name="update" value="Submit">                         
@@ -170,12 +180,12 @@ class Content{
 
     public function build_edit(){
         if(!empty($_POST['choice'])) {
-            $_SESSION['choice']=$_POST['choice'];
-            if ($this->only_one_check($_SESSION['choice'])) {
+            $ins_data=$_POST['choice'];
+            if ($this->only_one_check($ins_data)) {
 
-                $var = $this->take_one($_SESSION['choice']);
+                $var = $this->take_one($ins_data);
 
-                $data = $this->db->query('SELECT * FROM `users` WHERE id = "' . $var . '"')->fetch_all(MYSQLI_ASSOC);
+                $data = $this->content_query("SELECT * FROM `users` WHERE id = $var")->fetch_all(MYSQLI_ASSOC);
 
                 $value = $data[0];
                 $this->show_edit($value['id'], $value['login'], $value['password'], $value['email'], $value['f_name'], $value['l_name']);
@@ -187,68 +197,62 @@ class Content{
         $_SESSION['edit']=true;
         $this->build_edit();
         if(isset($_POST['update'])){
-            $this->db->query('UPDATE `users`
-                      SET `login`="' . $_POST['new_login'] . '",
-                       `password`="'.$_POST['new_pass'].'",
-                        `email`="'.$_POST['new_email'].'",
-                         `f_name`="'.$_POST['new_fname'].'",
-                          `l_name`="'.$_POST['new_lname'].'"
-                           where `id`="'.$_POST['id'].'"');
+            $this->content_query('UPDATE `users`
+                                  SET `login`="' . $_POST['new_login'] . '",
+                                      `password`="'.$_POST['new_pass'].'",
+                                      `email`="'.$_POST['new_email'].'",
+                                      `f_name`="'.$_POST['new_fname'].'",
+                                      `l_name`="'.$_POST['new_lname'].'"
+                                  WHERE `id`="'.$_POST['id'].'"');
 
-            session_unset();
-            unset($_POST);
-            header('Location: http://localhost/datagrid/index.php ');
+            $this->redirect_to_main();
         }
 
         if(!empty($_POST['back'])){
 
-            session_unset();
-            unset($_POST);
-            header('Location: http://localhost/datagrid/index.php ');
+            $this->redirect_to_main();
+        }
+        if(!empty($_POST['edit']) and empty($_POST['choice'])){
+            $this->redirect_to_main();
         }
 
-        if(empty($_SESSION['choice']) or $this->only_one_check($_SESSION['choice'])==false){
-            session_unset();
-            unset($_POST);
-            header('Location: http://localhost/datagrid/index.php ');
-        }
 
     }
 
 //======================================================================================================================
 //====Exporting=========================================================================================================
 
+    public function write_in_file($file_name,$mode){
+        $fp = fopen($file_name, "$mode");
+        foreach ($_POST['choice'] as $key) {
+            $data[] = $this->content_query("select * from `users` where id = $key")->fetch_all(MYSQLI_ASSOC);//
+            foreach ($data as $value) {
+                foreach ($value as $info) {
+                    $str = $info['login'] . ': '              . "\r" .
+                           ' Password: '  . $info['password'] . "\n " .
+                           'Email: '      . $info['email']    . "\n " .
+                           'First name: ' . $info['f_name']   . "\n " .
+                           'Last name: '  . $info['l_name']   . "\n ";
+                }
+            }
+            fwrite($fp, $str . "\r\n");
+        }
+        fclose($fp);
+        $this->redirect_to_main();
+    }
+
     public function export(){
         if(!empty($_POST['choice'])){
-            $fp = fopen('result/result.txt', 'w');
-            foreach($_POST['choice'] as $key){
-                $data[] = $this->db->query('select * from `users` where id = "'.$key.'"')->fetch_all(MYSQLI_ASSOC);//
-                foreach($data as $value){
-                    foreach($value as $info){
-                        $str = $info['login'].': '."\r".' Password: '.$info['password']."\n ".'Email: '.$info['email']."\n ".'First name: '.$info['f_name']."\n ".'Last name: '.$info['l_name']."\n ";
-
-                    }
-                }
-
-                fwrite($fp, $str."\r\n");
+            $file_name="result/result.txt";
+            if(file_exists($file_name)){
+                $this->write_in_file($file_name,'w');
+            }else{
+                $this->write_in_file($file_name,'x');
             }
-            fclose($fp);
-            unset($_POST);
-            header('Location: http://localhost/datagrid/index.php ');
-
-
-
         }
 
-
-
-
-
-
         if(empty($_POST['choice']) and !empty($_POST['export'])){
-
-            unset($_POST);
-            header('Location: http://localhost/datagrid/index.php ');
+            $this->redirect_to_main();
         }
     }
 
@@ -258,11 +262,6 @@ class Content{
 
     public function show_cont()
     {
-
-//        print_r($_POST);
-
-
-//        print_r($_SESSION);
 
         if(!$_POST){
             $this->show_table();

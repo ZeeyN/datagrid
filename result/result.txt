@@ -1,0 +1,5 @@
+LOG:  Password: PASS
+ Email: MAIL
+ First name: F_NAME
+ Last name: L_NAME
+ 

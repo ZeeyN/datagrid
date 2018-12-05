@@ -1,4 +1,4 @@
-<?php include_once('includes/init.php');?>
+<?php include_once('init.php');?>
 <!doctype html>
 <html lang="en">
 <head>
